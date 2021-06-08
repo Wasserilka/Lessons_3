@@ -7,9 +7,9 @@ namespace Lesson_1
     {
         public DateTime Date { get; set; }
         public int Temperature { get; set; }
-        public WeatherForecast(string _date, int _temperature)
+        public WeatherForecast(DateTime _date, int _temperature)
         {
-            Date = Convert.ToDateTime(_date);
+            Date = _date;
             Temperature = _temperature;
         }
     }
@@ -20,56 +20,50 @@ namespace Lesson_1
         {
             Values = new List<WeatherForecast>();
         }
-        public void Add(string date, int temperature)
+        public void Add(DateTime date, int temperature)
         {
             foreach(WeatherForecast value in Values)
             {
-                if (value.Date == Convert.ToDateTime(date))
+                if (value.Date == date)
                 {
-                    throw new Exception($"Ошибка: дата {date} уже существует.");
+                    return;
                 }
             }
             Values.Add(new WeatherForecast(date, temperature));
         }
-        public object Get(string dateFrom, string dateTo)
+        public object Get(DateTime dateFrom, DateTime dateTo)
         {
             var list = new List<WeatherForecast>();
             foreach (WeatherForecast value in Values)
             {
-                if (value.Date >= Convert.ToDateTime(dateFrom) && value.Date <= Convert.ToDateTime(dateTo))
+                if (value.Date >= dateFrom && value.Date <= dateTo)
                 {
                     list.Add(value);
                 }
             }
-            if (list.Count > 0)
-            {
-                return list;
-            }
-            throw new Exception($"Ошибка: данных за промежуток {dateFrom}-{dateTo} не существует.");
+            return list;
         }
-        public void Update(string date, int temperature)
+        public void Update(DateTime date, int temperature)
         {
             foreach (WeatherForecast value in Values)
             {
-                if (value.Date == Convert.ToDateTime(date))
+                if (value.Date == date)
                 {
                     value.Temperature = temperature;
                     return;
                 }
             }
-            throw new Exception($"Ошибка: данных за дату {date} не существует.");
         }
-        public void Delete(string date)
+        public void Delete(DateTime dateFrom, DateTime dateTo)
         {
-            foreach (WeatherForecast value in Values)
+            for (int i = 0; i < Values.Count; i++)
             {
-                if (value.Date == Convert.ToDateTime(date))
+                if (Values[i].Date >= dateFrom && Values[i].Date <= dateTo)
                 {
-                    Values.Remove(value);
-                    return;
+                    Values.RemoveAt(i);
+                    i--;
                 }
             }
-            throw new Exception($"Ошибка: данных за дату {date} не существует.");
         }
     }
 }

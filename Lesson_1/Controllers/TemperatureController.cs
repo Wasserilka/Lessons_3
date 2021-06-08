@@ -19,63 +19,29 @@ namespace Lesson_1.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromQuery] string date, [FromQuery] int temperature)
+        public IActionResult Create([FromQuery] DateTime date, [FromQuery] int temperature)
         {
-            try
-            {
-                _holder.Add(date, temperature);
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
+            _holder.Add(date, temperature);
             return Ok();
         }
 
         [HttpGet("read")]
-        public IActionResult Read([FromQuery] string dateFrom, [FromQuery] string dateTo)
+        public IActionResult Read([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
-            try
-            {
-                return Ok(_holder.Get(dateFrom, dateTo));
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
-        }
-
-        [HttpGet("index")]
-        public IActionResult Index()
-        {
-            return Ok("welcome");
+            return Ok(_holder.Get(dateFrom, dateTo));
         }
 
         [HttpPut("update")]
-        public IActionResult Update([FromQuery] string date, [FromQuery] int temperature)
+        public IActionResult Update([FromQuery] DateTime date, [FromQuery] int temperature)
         {
-            try
-            {
-                _holder.Update(date, temperature);
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
+            _holder.Update(date, temperature);
             return Ok();
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete([FromQuery] string date)
+        public IActionResult Delete([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
-            try
-            {
-                _holder.Delete(date);
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
+            _holder.Delete(dateFrom, dateTo);
             return Ok();
         }
     }
