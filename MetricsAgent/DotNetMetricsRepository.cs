@@ -6,9 +6,9 @@ namespace MetricsAgent.DAL
 {
     public class DotNetMetric
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public int Value { get; set; }
+        public long Value { get; set; }
 
         public DateTimeOffset Time { get; set; }
     }
@@ -20,12 +20,9 @@ namespace MetricsAgent.DAL
 
     public class DotNetMetricsRepository : IDotNetMetricsRepository
     {
-        private const string ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
-
         public IList<DotNetMetric> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
-            connection.Open();
+            using var connection = IConnectionManager.GetOpenedConnection();
             using var cmd = new SQLiteCommand(connection);
 
             cmd.CommandText = "SELECT * FROM dotnetmetrics WHERE time BETWEEN @fromTime AND @toTime";
@@ -40,8 +37,8 @@ namespace MetricsAgent.DAL
                 {
                     returnList.Add(new DotNetMetric
                     {
-                        Id = reader.GetInt32(0),
-                        Value = reader.GetInt32(1),
+                        Id = reader.GetInt64(0),
+                        Value = reader.GetInt64(1),
                         Time = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(2))
                     });
                 }

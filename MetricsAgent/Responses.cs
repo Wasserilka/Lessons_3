@@ -11,8 +11,8 @@ namespace MetricsAgent.Responses
     public class CpuMetricDto
     {
         public DateTimeOffset Time { get; set; }
-        public int Value { get; set; }
-        public int Id { get; set; }
+        public long Value { get; set; }
+        public long Id { get; set; }
     }
 
     public class ByTimePeriodDotNetMetricsResponse
@@ -23,8 +23,8 @@ namespace MetricsAgent.Responses
     public class DotNetMetricDto
     {
         public DateTimeOffset Time { get; set; }
-        public int Value { get; set; }
-        public int Id { get; set; }
+        public long Value { get; set; }
+        public long Id { get; set; }
     }
 
     public class ByTimePeriodHddMetricsResponse
@@ -35,8 +35,8 @@ namespace MetricsAgent.Responses
     public class HddMetricDto
     {
         public DateTimeOffset Time { get; set; }
-        public int Value { get; set; }
-        public int Id { get; set; }
+        public long Value { get; set; }
+        public long Id { get; set; }
     }
 
     public class ByTimePeriodNetworkMetricsResponse
@@ -47,8 +47,8 @@ namespace MetricsAgent.Responses
     public class NetworkMetricDto
     {
         public DateTimeOffset Time { get; set; }
-        public int Value { get; set; }
-        public int Id { get; set; }
+        public long Value { get; set; }
+        public long Id { get; set; }
     }
 
     public class ByTimePeriodRamMetricsResponse
@@ -59,7 +59,7 @@ namespace MetricsAgent.Responses
     public class RamMetricDto
     {
         public DateTimeOffset Time { get; set; }
-        public int Value { get; set; }
-        public int Id { get; set; }
+        public long Value { get; set; }
+        public long Id { get; set; }
     }
 }
