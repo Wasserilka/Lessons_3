@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MetricsAgent.DAL;
+using MetricsAgent.Responses;
 
 namespace MetricsAgent.Controllers
 {
@@ -11,10 +11,34 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        private IHddMetricsRepository repository;
+        private readonly ILogger<HddMetricsController> _logger;
+
+        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository)
         {
-            return Ok();
+            _logger = logger;
+            _logger.LogDebug(1, "NLog встроен в HddMetricsController");
+
+            this.repository = repository;
+        }
+
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetByTimePeriod([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        {
+            var metrics = repository.GetByTimePeriod(fromTime, toTime);
+
+            var response = new ByTimePeriodHddMetricsResponse()
+            {
+                Metrics = new List<HddMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new HddMetricDto { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+            }
+
+            _logger.LogInformation($"fromTime: {fromTime}, toTime: {toTime}");
+            return Ok(response);
         }
     }
 }

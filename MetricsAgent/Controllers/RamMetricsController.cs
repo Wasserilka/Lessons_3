@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MetricsAgent.DAL;
+using MetricsAgent.Responses;
 
 namespace MetricsAgent.Controllers
 {
@@ -11,10 +11,34 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class RamMetricsController : ControllerBase
     {
-        [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        private IRamMetricsRepository repository;
+        private readonly ILogger<RamMetricsController> _logger;
+
+        public RamMetricsController(ILogger<RamMetricsController> logger, IRamMetricsRepository repository)
         {
-            return Ok();
+            _logger = logger;
+            _logger.LogDebug(1, "NLog встроен в RamMetricsController");
+
+            this.repository = repository;
+        }
+
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetByTimePeriod([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        {
+            var metrics = repository.GetByTimePeriod(fromTime, toTime);
+
+            var response = new ByTimePeriodRamMetricsResponse()
+            {
+                Metrics = new List<RamMetricDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new RamMetricDto { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+            }
+
+            _logger.LogInformation($"fromTime: {fromTime}, toTime: {toTime}");
+            return Ok(response);
         }
     }
 }

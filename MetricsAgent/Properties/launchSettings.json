@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/metrics/cpu/agent/1/from/2020/to/2021",
+      "launchUrl": "api/metrics/network/from/1970-01-01T00:00:00Z/to/1970-01-01T00:00:30Z",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
