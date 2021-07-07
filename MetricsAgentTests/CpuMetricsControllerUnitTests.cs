@@ -5,6 +5,7 @@ using MetricsAgent.DAL;
 using System;
 using Xunit;
 using Moq;
+using AutoMapper;
 
 namespace MetricsAgentTests
 {
@@ -13,14 +14,15 @@ namespace MetricsAgentTests
         private CpuMetricsController controller;
         private Mock<ILogger<CpuMetricsController>> mockLogger;
         private Mock<ICpuMetricsRepository> mockRepository;
-
+        private Mock<IMapper> mockMapper;
 
         public CpuMetricsControllerUnitTests()
         {
             mockRepository = new Mock<ICpuMetricsRepository>();
             mockLogger = new Mock<ILogger<CpuMetricsController>>();
+            mockMapper = new Mock<IMapper>();
 
-            controller = new CpuMetricsController(mockLogger.Object, mockRepository.Object);
+            controller = new CpuMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
         }
 
         [Fact]
