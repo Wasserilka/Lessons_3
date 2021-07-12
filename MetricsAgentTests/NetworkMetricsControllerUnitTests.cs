@@ -5,6 +5,7 @@ using MetricsAgent.DAL;
 using System;
 using Xunit;
 using Moq;
+using AutoMapper;
 
 namespace MetricsAgentTests
 {
@@ -13,13 +14,15 @@ namespace MetricsAgentTests
         private NetworkMetricsController controller;
         private Mock<ILogger<NetworkMetricsController>> mockLogger;
         private Mock<INetworkMetricsRepository> mockRepository;
+        private Mock<IMapper> mockMapper;
 
         public NetworkMetricsControllerUnitTests()
         {
             mockRepository = new Mock<INetworkMetricsRepository>();
             mockLogger = new Mock<ILogger<NetworkMetricsController>>();
+            mockMapper = new Mock<IMapper>();
 
-            controller = new NetworkMetricsController(mockLogger.Object, mockRepository.Object);
+            controller = new NetworkMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
         }
 
         [Fact]

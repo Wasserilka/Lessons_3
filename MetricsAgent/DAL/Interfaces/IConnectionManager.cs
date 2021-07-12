@@ -1,6 +1,6 @@
 ﻿using System.Data.SQLite;
 
-namespace MetricsAgent
+namespace MetricsAgent.DAL
 {
     interface IConnectionManager
     {

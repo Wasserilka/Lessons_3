@@ -4,27 +4,30 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MetricsAgent.DAL;
 using MetricsAgent.Responses;
+using AutoMapper;
+
 namespace MetricsAgent.Controllers
 {
     [Route("api/metrics/network")]
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
-        private INetworkMetricsRepository repository;
+        private INetworkMetricsRepository _repository;
         private readonly ILogger<NetworkMetricsController> _logger;
+        private readonly IMapper _mapper;
 
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
             _logger.LogDebug(1, "NLog встроен в NetworkMetricsController");
-
-            this.repository = repository;
+            _mapper = mapper;
+            _repository = repository;
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetByTimePeriod([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            var metrics = repository.GetByTimePeriod(fromTime, toTime);
+            var metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new ByTimePeriodNetworkMetricsResponse()
             {
@@ -33,7 +36,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new NetworkMetricDto { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             }
 
             _logger.LogInformation($"fromTime: {fromTime}, toTime: {toTime}");

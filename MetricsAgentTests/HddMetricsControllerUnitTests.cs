@@ -5,6 +5,7 @@ using MetricsAgent.DAL;
 using System;
 using Xunit;
 using Moq;
+using AutoMapper;
 
 namespace MetricsAgentTests
 {
@@ -13,13 +14,15 @@ namespace MetricsAgentTests
         private HddMetricsController controller;
         private Mock<ILogger<HddMetricsController>> mockLogger;
         private Mock<IHddMetricsRepository> mockRepository;
+        private Mock<IMapper> mockMapper;
 
         public HddMetricsControllerUnitTests()
         {
             mockRepository = new Mock<IHddMetricsRepository>();
             mockLogger = new Mock<ILogger<HddMetricsController>>();
+            mockMapper = new Mock<IMapper>();
 
-            controller = new HddMetricsController(mockLogger.Object, mockRepository.Object);
+            controller = new HddMetricsController(mockLogger.Object, mockRepository.Object, mockMapper.Object);
         }
 
         [Fact]
