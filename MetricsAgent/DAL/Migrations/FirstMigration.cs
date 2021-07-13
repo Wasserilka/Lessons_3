@@ -17,6 +17,10 @@ namespace MetricsAgent.DAL.Migrations
         public override void Down()
         {
             Delete.Table("cpumetrics");
+            Delete.Table("hddmetrics");
+            Delete.Table("dotnetmetrics");
+            Delete.Table("networkmetrics");
+            Delete.Table("rammetrics");
         }
 
         private void CreateTable(string tableName)
