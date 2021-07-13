@@ -6,5 +6,6 @@ namespace Core
     public interface IRepository<T> where T : class
     {
         IList<T> GetByTimePeriod(DateTimeOffset fromTime, DateTimeOffset toTime);
+        void Create(IMetric metric);
     }
 }

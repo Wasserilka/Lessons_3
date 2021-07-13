@@ -1,8 +1,9 @@
 ﻿using System;
+using Core;
 
 namespace MetricsAgent.DAL
 {
-    public class NetworkMetric
+    public class NetworkMetric : IMetric
     {
         public long Id { get; set; }
 

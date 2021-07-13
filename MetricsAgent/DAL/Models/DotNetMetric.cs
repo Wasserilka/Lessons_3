@@ -1,8 +1,9 @@
 ﻿using System;
+using Core;
 
 namespace MetricsAgent.DAL
 {
-    public class DotNetMetric
+    public class DotNetMetric : IMetric
     {
         public long Id { get; set; }
 

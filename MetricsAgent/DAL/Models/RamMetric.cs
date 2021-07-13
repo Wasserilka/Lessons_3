@@ -1,8 +1,9 @@
 ﻿using System;
+using Core;
 
 namespace MetricsAgent.DAL
 {
-    public class RamMetric
+    public class RamMetric : IMetric
     {
         public long Id { get; set; }
 
