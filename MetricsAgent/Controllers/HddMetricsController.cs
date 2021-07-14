@@ -43,13 +43,5 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation($"fromTime: {fromTime}, toTime: {toTime}");
             return Ok(response);
         }
-
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] HddMetricCreateRequest request)
-        {
-            _repository.Create(_mapper.Map<HddMetric>(request));
-
-            return Ok();
-        }
     }
 }
