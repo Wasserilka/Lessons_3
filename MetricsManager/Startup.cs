@@ -1,15 +1,16 @@
+using MetricsManager.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentMigrator.Runner;
+using AutoMapper;
+using MetricsManager.Jobs;
+using Quartz;
+using Quartz.Spi;
+using Quartz.Impl;
+using MetricsManager.Client;
 
 namespace MetricsManager
 {
@@ -25,10 +26,60 @@ namespace MetricsManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IAgentsRepository, AgentsRepository>();
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
+
+            services.AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                .AddSQLite()
+                .WithGlobalConnectionString(new ConnectionManager().ConnectionString)
+                .ScanIn(typeof(Startup).Assembly).For.Migrations())
+                .AddLogging(lb => lb
+                .AddFluentMigratorConsole());
+
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>();
+
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton<RamMetricJob>();
+            services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton<NetworkMetricJob>();
+            services.AddSingleton<HddMetricJob>();
+
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(CpuMetricJob),
+                cronExpression: "5/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(RamMetricJob),
+                cronExpression: "5/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(HddMetricJob),
+                cronExpression: "5/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NetworkMetricJob),
+                cronExpression: "5/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(DotNetMetricJob),
+                cronExpression: "5/5 * * * * ?"));
+
+            services.AddHostedService<QuartzHostedService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
+            migrationRunner.MigrateUp();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
