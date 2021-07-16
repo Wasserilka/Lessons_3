@@ -25,6 +25,21 @@ namespace MetricsManager.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Получает метрики RAM от указанного агента на заданном диапазоне времени
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/ram/agent/51684/from/1970-01-01T00:00:00Z/to/1970-01-02T00:00:00Z
+        ///
+        /// </remarks>
+        /// <param name="agentId">Идентификационный номер агента</param>
+        /// <param name="fromTime">Начальная метка времени в секундах с 01.01.1970</param>
+        /// <param name="toTime">Конечная метка времени в секундах с 01.01.1970</param>
+        /// <returns>Список метрик от указанного агента, которые были сохранены в заданном диапазоне времени</returns>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] long agentId, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -44,6 +59,20 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Получает метрики RAM от всех агентов на заданном диапазоне времени
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/metrics/ram/cluster/from/1970-01-01T00:00:00Z/to/1970-01-02T00:00:00Z
+        ///
+        /// </remarks>
+        /// <param name="fromTime">Начальная метка времени в секундах с 01.01.1970</param>
+        /// <param name="toTime">Конечная метка времени в секундах с 01.01.1970</param>
+        /// <returns>Список метрик от всех агентов, которые были сохранены в заданном диапазоне времени</returns>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAllCluster([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
