@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MetricsAgent.DAL;
 using MetricsAgent.Responses;
+using MetricsAgent.Requests;
 using AutoMapper;
 
 namespace MetricsAgent.Controllers

@@ -1,5 +1,6 @@
 ﻿using MetricsAgent.DAL;
 using MetricsAgent.Responses;
+using MetricsAgent.Requests;
 using AutoMapper;
 
 namespace MetricsAgent
@@ -9,19 +10,19 @@ namespace MetricsAgent
         public MapperProfile()
         {
             CreateMap<CpuMetric, CpuMetricDto>();
-            CreateMap<CpuMetricDto, CpuMetric>();
+            CreateMap<CpuMetricCreateRequest, CpuMetric>();
 
             CreateMap<DotNetMetric, DotNetMetricDto>();
-            CreateMap<DotNetMetricDto, DotNetMetric>();
+            CreateMap<DotNetMetricCreateRequest, DotNetMetric>();
 
             CreateMap<HddMetric, HddMetricDto>();
-            CreateMap<HddMetricDto, HddMetric>();
+            CreateMap<HddMetricCreateRequest, HddMetric>();
 
             CreateMap<NetworkMetric, NetworkMetricDto>();
-            CreateMap<NetworkMetricDto, NetworkMetric>();
+            CreateMap<NetworkMetricCreateRequest, NetworkMetric>();
 
             CreateMap<RamMetric, RamMetricDto>();
-            CreateMap<RamMetricDto, RamMetric>();
+            CreateMap<RamMetricCreateRequest, RamMetric>();
         }
     }
 }

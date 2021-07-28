@@ -1,9 +1,8 @@
 ﻿using System;
-using Core;
 
-namespace MetricsAgent.DAL
+namespace Core
 {
-    public class HddMetric : IMetric
+    public interface IMetric
     {
         public long Id { get; set; }
 
