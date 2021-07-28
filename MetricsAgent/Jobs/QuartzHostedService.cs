@@ -1,11 +1,9 @@
-﻿using MetricsAgent.DAL;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using Quartz.Spi;
-using Core;
 
 namespace MetricsAgent.Jobs
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MetricsAgent.Jobs
 {
+    [DisallowConcurrentExecution]
     public class NetworkMetricJob : IJob
     {
         private INetworkMetricsRepository _repository;

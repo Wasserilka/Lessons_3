@@ -10,7 +10,6 @@ using MetricsAgent.Jobs;
 using Quartz;
 using Quartz.Spi;
 using Quartz.Impl;
-using Core;
 
 namespace MetricsAgent
 {
@@ -56,25 +55,27 @@ namespace MetricsAgent
 
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
-                cronExpression: "0/5 * * * * ?"));
+                cronExpression: "5/5 * * * * ?"));
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(RamMetricJob),
-                cronExpression: "0/5 * * * * ?"));
+                cronExpression: "5/5 * * * * ?"));
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(HddMetricJob),
-                cronExpression: "0/5 * * * * ?"));
+                cronExpression: "5/5 * * * * ?"));
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(NetworkMetricJob),
-                cronExpression: "0/5 * * * * ?"));
+                cronExpression: "5/5 * * * * ?"));
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(DotNetMetricJob),
-                cronExpression: "0/5 * * * * ?"));
+                cronExpression: "5/5 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
+            migrationRunner.MigrateUp();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -90,8 +91,6 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
-
-            migrationRunner.MigrateUp();
         }
     }
 }
