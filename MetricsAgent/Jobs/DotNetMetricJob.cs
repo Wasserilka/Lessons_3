@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MetricsAgent.Jobs
 {
+    [DisallowConcurrentExecution]
     public class DotNetMetricJob : IJob
     {
         private IDotNetMetricsRepository _repository;
@@ -20,7 +21,13 @@ namespace MetricsAgent.Jobs
             long metricValue = 0;
             foreach (string instance in new PerformanceCounterCategory(".NET CLR Memory").GetInstanceNames())
             {
-                metricValue += Convert.ToInt64(new PerformanceCounter(".NET CLR Memory", "# bytes in all heaps", instance).NextValue());
+                try
+                {
+                    metricValue += Convert.ToInt64(new PerformanceCounter(".NET CLR Memory", "# bytes in all heaps", instance).NextValue());
+                }
+                catch (Exception)
+                {
+                }
             }
             var metricTime = DateTimeOffset.FromUnixTimeSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
 

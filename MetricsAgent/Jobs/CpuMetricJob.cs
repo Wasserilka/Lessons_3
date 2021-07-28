@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MetricsAgent.Jobs
 {
+    [DisallowConcurrentExecution]
     public class CpuMetricJob : IJob
     {
         private ICpuMetricsRepository _repository;
