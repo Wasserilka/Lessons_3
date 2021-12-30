@@ -23,6 +23,19 @@ namespace MetricsManager.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Регистрация нового агента в базе данных
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/agents/create?agentId=51684&amp;agentUrl=http://localhost:51684
+        ///
+        /// </remarks>
+        /// <param name="agentId">Идентификационный номер агента</param>
+        /// <param name="agentUrl">Адресс агента</param>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpPost("create")]
         public IActionResult CreateAgent([FromQuery] long agentId, [FromQuery] string agentUrl)
         {
@@ -32,6 +45,18 @@ namespace MetricsManager.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Активация указанного агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/agents/enable/51684
+        ///
+        /// </remarks>
+        /// <param name="agentId">Идентификационный номер агента</param>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpPut("enable/{agentId}")]
         public IActionResult EnableAgentById([FromRoute] long agentId)
         {
@@ -41,6 +66,18 @@ namespace MetricsManager.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Блокировка указанного агента
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/agents/disable/51684
+        ///
+        /// </remarks>
+        /// <param name="agentId">Идентификационный номер агента</param>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpPut("disable/{agentId}")]
         public IActionResult DisableAgentById([FromRoute] long agentId)
         {
@@ -50,6 +87,18 @@ namespace MetricsManager.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Получает cписок всех агентов
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET api/agents/list
+        ///
+        /// </remarks>
+        /// <returns>Список всех агентов</returns>
+        /// <response code="200">Успешный запрос</response>
+        /// <response code="400">Переданы неверные данные</response>  
         [HttpGet("list")]
         public IActionResult GetAgentsList()
         {

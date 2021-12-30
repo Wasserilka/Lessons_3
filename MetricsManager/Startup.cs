@@ -11,6 +11,10 @@ using Quartz;
 using Quartz.Spi;
 using Quartz.Impl;
 using MetricsManager.Client;
+using System;
+using Microsoft.OpenApi.Models;
+using System.IO;
+using System.Reflection;
 
 namespace MetricsManager
 {
@@ -74,6 +78,19 @@ namespace MetricsManager
                 cronExpression: "5/5 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API сервиса менеджера сбора метрик",
+                    Description = "Описание API сервиса",
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
@@ -94,6 +111,14 @@ namespace MetricsManager
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса менеджера сбора метрик");
+                c.RoutePrefix = string.Empty;
             });
         }
     }
